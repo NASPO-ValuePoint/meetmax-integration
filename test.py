@@ -4,10 +4,10 @@ import json
 import urllib
 import requests
 from requests_oauthlib import OAuth1Session
-import session
-import events
-import companies
-import attendees
+from meetmax import session
+from meetmax import events
+from meetmax import companies
+from meetmax import attendees
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -16,6 +16,20 @@ mm_secret = os.getenv("MEETMAX_SECRET")
 
 auth = session.create(mm_key, mm_secret)
 
+#Get Companies
+all_companies = {
+  "event_id" : mm_event_id,
+  "search_fld" : "attendee_role_id",
+  "search_for" : "NASPO2_SUPPLIER_CO",
+  "data_type" : "json"
+}
+
+company_data = companies.all(auth, all_companies)
+
+print(company_data)
+
+
+# Test Data Objects
 eventData = {
   "data_type" : "JSON"
 }
@@ -52,27 +66,6 @@ attendeeList = {
 }
 
 
-
-
-#print(events.all(auth, eventData))
-
-#print(json.dumps(events.roles(auth, eventRoles),  indent=2))
-
-#print(companies.add(auth, addCompany))
-
-#print(json.dumps(companies.all(auth, addCompany), indent=2))
-
-#print(attendees.add(auth, attendee_data))
-
-#print(json.dumps(attendees.all(auth, attendeeList), indent=2))
-
-#print(json.dumps(attendees.add(auth, company_data), indent=2))
-
-#print(json.dumps(attendees.all(auth, attendeeList), indent=2))
-
-
-
-
 company_data = {
   "event_id" : 70039,
   "first" : "Management",
@@ -84,8 +77,6 @@ company_data = {
   "virtual" : "Y",
   "data_type" : "JSON"
 }
-
-#print(companies.add(auth, company_data))
 
 company_rep = {
   "event_id" : 70039,
@@ -109,13 +100,6 @@ company_rep = {
   'data_type' : 'JSON'
 }
 
-#print(attendees.add(auth, company_rep))
-
-
-
-
-#print(attendees.edit(auth, edit_data))
-
 edit_data = {
   "event_id" : 70039,
   "investor_id" : 3315088,
@@ -123,8 +107,6 @@ edit_data = {
   'field_value' : 'NASPO2_OTHER_ATTENDEE',
   'data_type' : 'JSON',
 }
-
-print(attendees.edit(auth, edit_data))
 
 
 supplier_att = [{
@@ -293,10 +275,3 @@ state_att = [{
     'data_type': 'json'
 }
 ]
-
-
-#for x in state_att:
-  #time.sleep(1)
-  #print(attendees.add(auth, x))
-
-
