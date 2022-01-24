@@ -13,12 +13,12 @@ load_dotenv()
 
 mm_key = os.getenv("MEETMAX_KEY")
 mm_secret = os.getenv("MEETMAX_SECRET")
-
+mm_test_id = 80471
 auth = session.create(mm_key, mm_secret)
 
 #Get Companies
 all_companies = {
-  "event_id" : mm_event_id,
+  "event_id" : mm_test_id,
   "search_fld" : "attendee_role_id",
   "search_for" : "NASPO2_SUPPLIER_CO",
   "data_type" : "json"
@@ -35,19 +35,19 @@ eventData = {
 }
 
 eventRoles = {
-  "event_id" : 71011,
+  "event_id" : mm_test_id,
   "data_type" : "JSON"
 }
 
 companyData = {
-  "event_id" : 71011,
+  "event_id" : mm_test_id,
   "search_fld" : "attendee_role_id",
   "search_for" : "NASPO2_SUPPLIER_CO",
   "data_type" : "JSON"
 }
 
 addCompany = {
-  "event_id" : 71011,
+  "event_id" : mm_test_id,
   "first" : "Management",
   "last" : "Team",
   "company" : "Test Company, Inc.",
@@ -59,7 +59,7 @@ addCompany = {
 }
 
 attendeeList = {
-  "event_id" : 71011,
+  "event_id" : mm_test_id,
   "search_fld" : "attendee_role_id",
   "search_for" : "NASPO2_STATE_REP",
   "data_type" : "JSON"
@@ -67,7 +67,7 @@ attendeeList = {
 
 
 company_data = {
-  "event_id" : 70039,
+  "event_id" : mm_test_id,
   "first" : "Management",
   "last" : "Team",
   "company" : "Test Company, Inc.",
@@ -79,7 +79,7 @@ company_data = {
 }
 
 company_rep = {
-  "event_id" : 70039,
+  "event_id" : mm_test_id,
   'first' : 'Test', 
   'last' : 'SupplierRep2', 
   'company' : 'ABC, Inc.',
@@ -101,7 +101,7 @@ company_rep = {
 }
 
 edit_data = {
-  "event_id" : 70039,
+  "event_id" : mm_test_id,
   "investor_id" : 3315088,
   'field_name' : 'attendee_role_id',
   'field_value' : 'NASPO2_OTHER_ATTENDEE',
@@ -110,7 +110,7 @@ edit_data = {
 
 
 supplier_att = [{
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Eastern Time',
     'company': 'Test Company, Inc.',
@@ -123,7 +123,7 @@ supplier_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Central Time',
     'company': 'Test Company, Inc.',
@@ -136,7 +136,7 @@ supplier_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Mountain Time',
     'company': 'Test Company, Inc.',
@@ -149,7 +149,7 @@ supplier_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Pacific Time',
     'company': 'Test Company, Inc.',
@@ -162,7 +162,7 @@ supplier_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Alaska Time',
     'company': 'Test Company, Inc.',
@@ -175,7 +175,7 @@ supplier_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Hawaii Time',
     'company': 'Test Company, Inc.',
@@ -191,7 +191,7 @@ supplier_att = [{
 
 
 state_att = [{
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Eastern Time',
     'company': 'Test State',
@@ -205,7 +205,7 @@ state_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Central Time',
     'company': 'Test State',
@@ -219,7 +219,7 @@ state_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Mountain Time',
     'company': 'Test State',
@@ -233,7 +233,7 @@ state_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Pacific Time',
     'company': 'Test State',
@@ -247,7 +247,7 @@ state_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Alaska Time',
     'company': 'Test State',
@@ -261,7 +261,7 @@ state_att = [{
     'data_type': 'json'
 },
 {
-    'event_id': 70039,
+    'event_id': mm_test_id,
     'first': 'Test',
     'last': 'Hawaii Time',
     'company': 'Test State',
@@ -275,3 +275,4 @@ state_att = [{
     'data_type': 'json'
 }
 ]
+
