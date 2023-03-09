@@ -123,3 +123,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Common IntelliJ Platform excludes
+#### ignore all .idea files ...
+*
