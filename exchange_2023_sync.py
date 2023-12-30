@@ -147,7 +147,7 @@ def sync_others(event_id):
 mm_test_id = 90203
 mm_id = 90199
 standaradize_company_names()
-sync_company_names(mm_id)
-sync_suppliers(mm_id)
-sync_state_members(mm_id)
-sync_others(mm_id)
+# sync_company_names(mm_id)
+# sync_suppliers(mm_id)
+# sync_state_members(mm_id)
+# sync_others(mm_id)

@@ -69,6 +69,7 @@ def cleancol(input):
 
 
 #input = 'Facilities MRO, OTHER: Metalworking'
-#input = ''
-input = 'Office Equipment/Supplies/Service (Copiers, Paper, Furniture, Mailroom, etc.), OTHER: Managed Print Services, Document Solutions'
-#print(cleancol(input))
+input = ''
+input = 'OTHER: Cooperative'
+#input = '''Office Equipment and Supplies, Technology - Hardware/Software, OTHER: information  Management'''
+#print(cleancol(input)[0])

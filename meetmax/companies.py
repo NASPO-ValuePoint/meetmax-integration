@@ -7,7 +7,7 @@ def all(session, event_id):
   all_companies = {
       "event_id": event_id,
       "search_fld": "attendee_role_id",
-      "search_for": "NASPO2_SUPPLIER_CO",
+      "search_for": "NASPO3_SUPPLIER_CO",
       "data_type": "json"
   }
   try:
@@ -26,7 +26,7 @@ def add(session, record, event_id):
       "first": "Management",
       "last": "Team",
       "company": record['Company'],
-      "attendee_role_id": "NASPO2_SUPPLIER_CO",
+      "attendee_role_id": "NASPO3_SUPPLIER_CO",
       "is_entity": "Y",
       "attendee_type": "E",
       "virtual": "Y",
