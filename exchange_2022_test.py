@@ -5,33 +5,27 @@ This will prevent duplicate company names by standardizing them.'''
 
 import os
 import time
-import json
-import uuid
-import urllib
-import requests
-import psycopg2
+
 import psycopg2.extras
-import oauthlib
-from requests_oauthlib import OAuth1Session
-from meetmax import session
-from meetmax import events
-from meetmax import companies
-from meetmax import attendees
-from meetmax import helpers
 from dotenv import load_dotenv
+
+from meetmax import attendees
+from meetmax import companies
+from meetmax import helpers
+from meetmax import session
 
 load_dotenv()
 
 mm_key = os.getenv("mm_key")
 mm_secret = os.getenv("mm_secret")
 mm_test_id = 90203
-#mm_real_id = 80369
+# mm_real_id = 80369
 
 # Connect to meetmax api
 auth = session.create(mm_key, mm_secret)
-#print(auth)
+# print(auth)
 
-#Connect to data warehouse
+# Connect to data warehouse
 conn = psycopg2.connect(host=os.environ.get("DB_HOST"), database=os.environ.get(
     "DB_DATABASE"), user=os.environ.get("DB_USER"), password=os.environ.get("DB_PASSWORD"))
 cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -50,7 +44,7 @@ company_mm = companies.all(auth, all_companies)
 company_map = map(lambda x: x['company'], company_mm['results'])
 
 company_list = list(company_map)
-#print(company_list)
+# print(company_list)
 
 # get list of companies from the data warehouse
 query_companies = '''SELECT DISTINCT "Company" FROM warehouse.exchange_meetmax 
@@ -58,7 +52,7 @@ query_companies = '''SELECT DISTINCT "Company" FROM warehouse.exchange_meetmax
                      '''
 cur.execute(query_companies)
 companies_db = cur.fetchall()
-#print(companies_db)
+# print(companies_db)
 
 for c in companies_db:
     # print(c['Company'])
@@ -79,11 +73,9 @@ for c in companies_db:
         }
         time.sleep(1)
         added = companies.add(auth, company_data)
-        #print(added)
+        # print(added)
 
-
-
-#Get "Taking 1-on-1 appointments/State Members bucket" information from data warehouse
+# Get "Taking 1-on-1 appointments/State Members bucket" information from data warehouse
 query_attendee = '''SELECT * FROM warehouse.exchange_meetmax where meetmax_id is NULL AND
                                                 meetmax_status is NULL AND
                                                "One-on-One appointments" = 'Yes' AND
@@ -93,18 +85,19 @@ query_attendee = '''SELECT * FROM warehouse.exchange_meetmax where meetmax_id is
 cur.execute(query_attendee)
 taking_appts = cur.fetchall()
 print('Total NASPO2_STATE_REPS to add - ', len(taking_appts))
-#print(taking_appts[11])
+# print(taking_appts[11])
 
-#add the info to meetmax
+# add the info to meetmax
 for a in taking_appts:
-    #print(a)
+    # print(a)
     state_rep_att = {
         'event_id': mm_test_id,
         'first': a['First Name'],
         'last': a['Last Name'],
         'company': a['Company'],
         'title': a['Title'],
-        'attendee_role_id': 'NASPO2_AFFILIATE' if a['Registration Type'] == 'Affiliate Division' else 'NASPO2_STATE_REP',
+        'attendee_role_id': 'NASPO2_AFFILIATE' if a[
+                                                      'Registration Type'] == 'Affiliate Division' else 'NASPO2_STATE_REP',
         'email': a['Email'],
         'username': a['Email'],
         'password': 'exchange2022',
@@ -117,26 +110,26 @@ for a in taking_appts:
         'receive_request': 'Y' if a['One-on-One appointments'] == 'Yes' else 'N',
         'data_type': 'json'
     }
-    #print(state_rep_att)
+    # print(state_rep_att)
     time.sleep(1)
     attendee_data = attendees.add(auth, state_rep_att)
     print(attendee_data)
 
-#Add information in cvent_meetmax(new table) to keep track of registrants already in meetmax as well as their meetmax_id in the data warehouse
+    # Add information in cvent_meetmax(new table) to keep track of registrants already in meetmax as well as their meetmax_id in the data warehouse
     if "status_code" in attendee_data:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
                         VALUES(%s, %s)''', (a["Registration ID"], attendee_data['id'])
-                  )
-      print(a["Registration ID"] + " - Attendee Added.")
+                    )
+        print(a["Registration ID"] + " - Attendee Added.")
     else:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
                         VALUES(%s, %s)''', (a["Registration ID"], str(attendee_data))
-                  )
-      print(a["Registration ID"] + " - Error Adding Attendee.")
+                    )
+        print(a["Registration ID"] + " - Error Adding Attendee.")
 conn.commit()
 #
 #
-#Get "Making 1-on-1 appointments/Suppliers bucket" information from warehouse
+# Get "Making 1-on-1 appointments/Suppliers bucket" information from warehouse
 query_attendee = '''SELECT * FROM warehouse.exchange_meetmax
                     WHERE meetmax_id is NULL AND meetmax_status is NULL AND
                     "One-on-One appointments" = 'Yes' and
@@ -146,11 +139,11 @@ query_attendee = '''SELECT * FROM warehouse.exchange_meetmax
 cur.execute(query_attendee)
 making_appts = cur.fetchall()
 print('Total NASPO2_SUPPLIER_ATT to add - ', len(making_appts))
-#print(making_appts[55])
+# print(making_appts[55])
 
-#add the info to meetmax
+# add the info to meetmax
 for a in making_appts:
-    #print(a)
+    # print(a)
     suppliers_att = {
         'event_id': mm_real_id,
         'first': a['First Name'],
@@ -171,24 +164,24 @@ for a in making_appts:
         'receive_request': 'Y' if a['One-on-One appointments'] == 'Yes' else 'N',
         'data_type': 'json'
     }
-    #print(suppliers_att)
+    # print(suppliers_att)
     time.sleep(1)
     attendee_data = attendees.add(auth, suppliers_att)
     print(attendee_data)
 
     if "status_code" in attendee_data:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
                         VALUES(%s, %s)''', (a["Registration ID"], attendee_data['id'])
-                  )
-      print(a["Registration ID"] + " - Attendee Added.")
+                    )
+        print(a["Registration ID"] + " - Attendee Added.")
     else:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
                         VALUES(%s, %s)''', (a["Registration ID"], str(attendee_data))
-                  )
-      print(a["Registration ID"] + " - Error Adding Attendee.")
+                    )
+        print(a["Registration ID"] + " - Error Adding Attendee.")
 conn.commit()
 
-#Other attendees not participating in one-on-one appointments
+# Other attendees not participating in one-on-one appointments
 query_attendee = '''SELECT * FROM warehouse.exchange_meetmax
                     WHERE coalesce("One-on-One appointments", 'No') = 'No' AND
                           meetmax_id is NULL AND
@@ -197,11 +190,11 @@ query_attendee = '''SELECT * FROM warehouse.exchange_meetmax
 cur.execute(query_attendee)
 others = cur.fetchall()
 print('Total OTHER attendees to add - ', len(others))
-#print(making_appts[55])
+# print(making_appts[55])
 
-#add the info to meetmax
+# add the info to meetmax
 for a in others:
-    #print(a)
+    # print(a)
     others = {
         'event_id': mm_real_id,
         'first': a['First Name'],
@@ -219,25 +212,23 @@ for a in others:
         'receive_request': 'N',
         'data_type': 'json'
     }
-    #print(others)
+    # print(others)
     time.sleep(1)
     attendee_data = attendees.add(auth, others)
     print(attendee_data)
 
     if "status_code" in attendee_data:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_id)
                         VALUES(%s, %s)''', (a["Registration ID"], attendee_data['id'])
-                  )
-      print(a["Registration ID"] + " - Attendee Added.")
+                    )
+        print(a["Registration ID"] + " - Attendee Added.")
     else:
-      cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
+        cur.execute('''INSERT INTO warehouse.cvent_meetmax(registration_id, meetmax_status)
                         VALUES(%s, %s)''', (a["Registration ID"], str(attendee_data))
-                  )
-      print(a["Registration ID"] + " - Error Adding Attendee.")
-
+                    )
+        print(a["Registration ID"] + " - Error Adding Attendee.")
 
 conn.commit()
 cur.close()
 conn.close()
 auth.close()
-

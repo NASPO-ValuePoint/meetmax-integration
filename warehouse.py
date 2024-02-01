@@ -1,8 +1,8 @@
-import os
-import json
 import psycopg2
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 def get_query_data(conn, query):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -11,6 +11,7 @@ def get_query_data(conn, query):
     conn.commit()
     cur.close()
     return data
+
 
 def insert_meetmax_status(conn, cvent_record, meetmax_status):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
