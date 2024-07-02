@@ -24,26 +24,26 @@ def add_supplier(session, record, event_id):
     suppliers_att = {
         'event_id': event_id,
         'first': record['First Name'],
-        'last': record['Last Name'],
-        'company': record['Company'],
-        'title': record['Title'],
-        'attendee_role_id': 'NASPO3_SUPPLIER_ATT',
-        # 'custom_19984': record['Registration Type'], //Not required for suppliers
-        # 'custom_19985': record['Entity Type'], //Not required for suppliers
+         'last': record['Last Name'],
+         'company': record['Company'],
+         'title': record['Title'],
+         'attendee_role_id': 'NASPO3_SUPPLIER_ATT',
+         'custom_19984': record['Registration Type'], #Not required for suppliers
+         #'custom_19985': record['Entity Type'], #Not required for suppliers
         'email': record['Email'],
         'username': record['Email'],
-        'password': 'exchange2024',
-        # 'custom_12784': 'Eastern', //Not needed, this is only for virtual events
+        'password': 'exchange2025',
+        #'custom_12784': 'Eastern', #Not needed, this is only for virtual events
         'custom_12766': record['bio'],
         'custom_7581': record['headshot'],
-        'custom_9069': helpers.cleancol(record['Categories/Industries'])[0],
-        'custom_8928': helpers.cleancol(record['Categories/Industries'])[1],
+        'custom_21814': helpers.cleancol(record['Categories/Industries'])[0],
+        'custom_21815': helpers.cleancol(record['Categories/Industries'])[1],
         'custom_14639': record['Status'],
-        'custom_7664': 6,
+        'custom_7664': 10,  #check to see if number of meetings need to change
         'receive_request': 'Y' if record['One-on-One appointments'] == 'Yes' else 'N',
         'data_type': 'json'
     }
-    # print(suppliers_att)
+    #print(suppliers_att)
     time.sleep(5)
     try:
         r = session.get(url, params=suppliers_att)
@@ -68,18 +68,18 @@ def add_statemember(session, record, event_id):
         'custom_19985': record['Entity Type'],
         'email': record['Email'],
         'username': record['Email'],
-        'password': 'exchange2024',
+        'password': 'exchange2025',
         # 'custom_12784': 'Eastern',
         'custom_12766': record['bio'],
         'custom_7581': record['headshot'],
-        'custom_9069': helpers.cleancol(record['Categories/Industries'])[0],
-        'custom_8928': helpers.cleancol(record['Categories/Industries'])[1],
+        'custom_21814': helpers.cleancol(record['Categories/Industries'])[0],
+        'custom_21815': helpers.cleancol(record['Categories/Industries'])[1],
         'custom_14639': record['Status'],
         'receive_request': 'Y' if record['One-on-One appointments'] == 'Yes' else 'N',
         'data_type': 'json'
     }
     # print(state_rep_att)
-    time.sleep(10)
+    time.sleep(5)
     try:
         r = session.get(url, params=state_rep_att)
         r.raise_for_status()
@@ -102,7 +102,7 @@ def add_other(session, record, event_id):
         'custom_19985': record['Entity Type'],
         'email': record['Email'],
         'username': record['Email'],
-        'password': 'exchange2024',
+        'password': 'exchange2025',
         # 'custom_12784': 'Eastern',
         'custom_12766': record['bio'],
         'custom_7581': record['headshot'],
